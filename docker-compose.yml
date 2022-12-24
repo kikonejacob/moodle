@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+    mysql:
+        image: 'mysql/mysql-server:8.0'
+        restart: always
+        volumes:
+            - db-volume:/var/lib/mysql
+        env_file:
+            - .env_dev
+        networks:
+            - backendDB
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+    moodle.dev:
+        build:
+             context: .
+        links:
+            - mysql:DB
+        depends_on: 
+            - mysql
+        restart: always
+        volumes:
+            - ./:/var/www/html
+        ports:
+            - 8082:80
+            - 443:443
+        env_file:
+            - .env_dev
+        networks:
+            - backendDB
+            - frontendWEB
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: on-failure            
+
+volumes: 
+    db-volume:
+    moodle-data:
+
+networks:
+    backendDB:
+    frontendWEB:
