@@ -20,10 +20,11 @@ services:
         links:
             - mysql:DB
         depends_on: 
-            - mysql
+            - mysql 
         restart: always
         volumes:
             - ./:/var/www/html
+            - ./moodledata:/var/www/moodledata
         ports:
             - 8082:80
             - 443:443

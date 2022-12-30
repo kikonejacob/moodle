@@ -21,7 +21,9 @@ ENV MOODLE_URL http://127.0.0.1
 ENV SSL_PROXY false
 
 COPY ./docker/foreground.sh /etc/apache2/foreground.sh
-# COPY . /var/www/html
+
+COPY docker/docker-php-max_input_vars.ini /usr/local/etc/php/conf.d/max_input_vars.ini
+COPY docker/docker-php-max_input_vars.ini /etc/php/8.1/apache2/php.ini
 
 RUN apt-get update && apt-get upgrade -y && \
 	apt-get -y install mysql-client pwgen python-setuptools curl git unzip apache2 php \
@@ -33,6 +35,7 @@ RUN apt-get update && apt-get upgrade -y && \
 
 #cron
 COPY docker/moodlecron /etc/cron.d/moodlecron
+
 RUN chmod 0644 /etc/cron.d/moodlecron
 
 # Enable SSL, moodle requires it
